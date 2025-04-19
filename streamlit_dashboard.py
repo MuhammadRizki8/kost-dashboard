@@ -189,54 +189,44 @@ with trend_cols[2]:
 
 st.markdown("---")
 
-# ------------------------------
-# Map & Data Table
-# ------------------------------
-map_col, table_col = st.columns([2, 1])
+st.subheader("🗺️ Peta Persebaran Kost")
+if not df_filtered.empty:
+    center_lat, center_lon = df_filtered['latitude'].mean(), df_filtered['longitude'].mean()
+    layer_type = st.radio("Tipe Layer", ["Scatter", "Hexagon"], horizontal=True)
 
-with map_col:
-    st.subheader("🗺️ Peta Persebaran Kost")
-    if not df_filtered.empty:
-        center_lat, center_lon = df_filtered['latitude'].mean(), df_filtered['longitude'].mean()
-        layer_type = st.radio("Tipe Layer", ["Scatter", "Hexagon"], horizontal=True)
-
-        if layer_type == "Scatter":
-            layer = pdk.Layer(
-                "ScatterplotLayer",
-                df_filtered,
-                get_position='[longitude, latitude]',
-                get_color='[255,99,71,140]',
-                get_radius='luas_m2 * 10',
-                pickable=True
-            )
-        else:
-            layer = pdk.Layer(
-                "HexagonLayer",
-                df_filtered,
-                get_position='[longitude, latitude]',
-                radius=50,
-                extruded=True,
-                pickable=True
-            )
-
-        view_state = pdk.ViewState(
-            latitude=center_lat,
-            longitude=center_lon,
-            zoom=11,
-            pitch=45
+    if layer_type == "Scatter":
+        layer = pdk.Layer(
+            "ScatterplotLayer",
+            df_filtered,
+            get_position='[longitude, latitude]',
+            get_color='[255,99,71,140]',
+            get_radius='luas_m2 * 10',
+            pickable=True
+        )
+    else:
+        layer = pdk.Layer(
+            "HexagonLayer",
+            df_filtered,
+            get_position='[longitude, latitude]',
+            radius=50,
+            extruded=True,
+            pickable=True
         )
 
-        st.pydeck_chart(pdk.Deck(
-            layers=[layer],
-            initial_view_state=view_state,
-            tooltip={"html": "<b>Harga:</b> {harga}<br/><b>Luas:</b> {luas_m2}m²"}
-        ))
-    else:
-        st.info("Tidak ada data untuk peta.")
+    view_state = pdk.ViewState(
+        latitude=center_lat,
+        longitude=center_lon,
+        zoom=11,
+        pitch=45
+    )
 
-with table_col:
-    st.subheader("📋 Data Listing")
-    st.dataframe(df_filtered.reset_index(drop=True), use_container_width=True)
+    st.pydeck_chart(pdk.Deck(
+        layers=[layer],
+        initial_view_state=view_state,
+        tooltip={"html": "<b>Harga:</b> {harga}<br/><b>Luas:</b> {luas_m2}m²"}
+    ))
+else:
+    st.info("Tidak ada data untuk peta.")
 
 # ------------------------------
 # Footer Sidebar
