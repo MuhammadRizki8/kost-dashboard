@@ -1,6 +1,3 @@
 [theme]
-primaryColor = "#4DA8DA"      # Biru muda
-backgroundColor = "#FFFFFF"   # Putih
-secondaryBackgroundColor = "#F0F2F6"
-textColor = "#262730"
-font = "sans serif"
+base="light"
+primaryColor="#4bc0ff"
