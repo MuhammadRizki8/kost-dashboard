@@ -1,0 +1,6 @@
+streamlit>=1.30
+pandas>=1.5
+numpy>=1.21
+altair>=5.0
+scipy>=1.10
+pydeck>=0.8
